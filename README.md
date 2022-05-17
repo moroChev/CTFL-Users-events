@@ -1,6 +1,6 @@
 # Introduction
 
-The following is an implementation of an API and CLI to convert currencies.
+The following is an implementation of an API to fetch last state of users events.
 
 # Project Setup
 
