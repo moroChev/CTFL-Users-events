@@ -54,7 +54,11 @@ $ uvicorn app.main:app --reload
 │   ├── __init__.py
 │   ├── main.py                # contains the api end point
 │   ├── service.py             # contains the api business logic
-│   └── utils.py               # contains some common elements
+│   ├── utils.py               # contains some common elements
+│   └── data/ 
+│        ├── org_events.json       # org events data  
+│        └── user_events.json      # users events data   
+│           
 ├── Dockerfile
 ├── docker-compose.yaml
 ├── Makefile
