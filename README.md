@@ -7,8 +7,10 @@ The following is an implementation of an API to fetch last state of users events
 ### Prerequisites
 
 - Python 3.8.6 or higher
-- FastAPI
 - Docker
+- Kafka
+- Redis
+- FastAPI
 
 ### Running the API with the Docker Container
 
