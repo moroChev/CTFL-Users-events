@@ -1,12 +1,65 @@
 version: "3.8"
 
+networks:
+  kafka-network:
+    driver: bridge
+    name: kafka-network
+  apps-network:
+    driver: bridge
+    name: apps-network
+
 services:
-    backend:
-        build:
-            context: .
-            dockerfile: Dockerfile
+    zookeeper:
+        image: wurstmeister/zookeeper
+        container_name: zookeeper
+        ports:
+            - "2181:2181"
+        networks:
+            - kafka-network
+
+    kafka:
+        image: wurstmeister/kafka
+        container_name: kafka
+        ports:
+          - "9092:9092"
+        expose:
+          - "29092"
+        environment:
+          KAFKA_CREATE_TOPICS: "users-events:1:1,orgs-event:1:1"
+          KAFKA_LISTENERS: INSIDE://:29092,OUTSIDE://:9092
+          KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:29092,OUTSIDE://localhost:9092
+          KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+          KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+          KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+        depends_on:
+          - zookeeper
+        networks:
+            - kafka-network
+
+    api:
+        build: ./app
+        container_name: api
         command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
         volumes:
             - ./app:/usr/src/cftl_challenge/app
         ports:
             - 8000:8000
+        depends_on:
+            - kafka 
+        networks:
+            - apps-network
+
+    redis:
+        image: redis/redis-stack:latest
+        container_name: redis-consumer
+        ports:
+          - 6379:6379
+          - 8001:8001
+        deploy:
+          replicas: 1
+          restart_policy:
+            condition: on-failure
+        depends_on:
+            - kafka
+        networks:
+            - kafka-network
