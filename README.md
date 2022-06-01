@@ -22,28 +22,14 @@ $ make pull
 # Build the image
 $ make build
 
-# Run the container
+# Run the containers
 $ make start
+
+# start producing data
+$ make produce
 ```
 
 
-### Running the API locally
-
-- In case we do not have Docker already instaled, we can run the API in our local environment by executing the following commands.
-
-
-```sh
-# creating virtual environment
-$ python3 -m venv venv
-
-# activate virtual environment
-$ source venv/bin/activate
-
-# install all dependencies
-$ pip install -r requirements.txt
-
-# Running the application using uvicorn
-$ uvicorn app.main:app --reload
 ```
 
 # Project Structure
@@ -54,12 +40,24 @@ $ uvicorn app.main:app --reload
 │   ├── __init__.py
 │   ├── main.py                # contains the api end point
 │   ├── service.py             # contains the api business logic
-│   ├── utils.py               # contains some common elements
+│   ├── Dockerfile.py          # dockerfile for redis container
+│   ├── utils.py               # contains some common elements  
+│   └── requirements.txt       # the env requirements
+│ 
+├── redis
+│   ├── consume.py                # data consumer
+│   ├── Dockerfile.py             # dockerfile for redis container
+│   ├── requirements.txt          # the env requirements
+│   └── utils.py                  # contains some common elements
+│ 
+├── producer
+│   ├── __init__.py
+│   ├── produce.py                # script to produce data
+│   ├── utils.py                  # contains some common elements
 │   └── data/ 
 │        ├── org_events.json       # org events data  
 │        └── user_events.json      # users events data   
 │           
-├── Dockerfile
 ├── docker-compose.yaml
 ├── Makefile
 └── requirements.txt

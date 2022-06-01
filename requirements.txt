@@ -3,3 +3,5 @@ requests
 uvicorn
 pydantic
 pytest
+kafka-python
+docker

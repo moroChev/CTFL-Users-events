@@ -16,3 +16,6 @@ pull:
 
 build:
 	docker-compose build
+
+produce:
+	python3 producer/produce.py
